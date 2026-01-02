@@ -1,0 +1,22 @@
+# Backend
+backend/__pycache__/
+backend/*.pyc
+backend/.env
+backend/tournaments.db
+backend/.venv
+backend/venv
+
+# Frontend
+frontend/node_modules
+frontend/.next
+frontend/dist
+frontend/.env
+frontend/.env.local
+frontend/yarn-error.log
+frontend/.DS_Store
+
+# General
+.DS_Store
+.vscode
+.idea
+*.log
