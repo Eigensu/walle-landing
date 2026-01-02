@@ -57,10 +57,10 @@ export default function ContactPage() {
             <h3 className="text-xl font-semibold text-white mb-2">Email Us</h3>
             <p className="text-purple-300 mb-4">Send us an email anytime</p>
             <a 
-              href="mailto:hello@wallearena.com" 
+              href="mailto:walleevents@gmail.com" 
               className="text-purple-400 hover:text-purple-300 transition-colors"
             >
-              hello@wallearena.com
+              walleevents@gmail.com
             </a>
           </div>
 
@@ -72,25 +72,23 @@ export default function ContactPage() {
             <h3 className="text-xl font-semibold text-white mb-2">Visit Us</h3>
             <p className="text-purple-300 mb-4">Our office location</p>
             <p className="text-purple-400">
-              San Francisco, CA<br />
-              United States
+              Mumbai, Maharashtra<br />
+              India
             </p>
           </div>
 
-          {/* Website Card */}
+          {/* Phone Card */}
           <div className="purple-gradient rounded-walle-lg p-8 border border-walle-purple/30 text-center hover:scale-105 transition-transform duration-300">
             <div className="bg-purple-500/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
               <Globe className="w-8 h-8 text-purple-400" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">Online</h3>
-            <p className="text-purple-300 mb-4">Check out our website</p>
+            <h3 className="text-xl font-semibold text-white mb-2">Call Us</h3>
+            <p className="text-purple-300 mb-4">Reach us by phone</p>
             <a 
-              href="https://wallearena.com" 
+              href="tel:+919137055633" 
               className="text-purple-400 hover:text-purple-300 transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
             >
-              wallearena.com
+              +91 91370 55633
             </a>
           </div>
         </div>
