@@ -90,7 +90,7 @@ class TournamentUpdateSchema(BaseModel):
 # FASTAPI APP SETUP
 # =====================================
 
-app = FastAPI(title="Tournament Aggregator API", version="1.0.0")
+app = FastAPI(title="Walle Arena API", version="1.0.0")
 
 # CORS Configuration
 app.add_middleware(

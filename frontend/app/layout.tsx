@@ -3,7 +3,7 @@ import { QueryProvider } from '@/lib/query-provider';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Tournament Aggregator',
+  title: 'Walle Arena | Your custom fantasy app',
   description: 'Live gaming tournaments at your fingertips',
   icons: {
     icon: '/walle-logo.png',
