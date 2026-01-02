@@ -1,7 +1,7 @@
 """
 Tournament Aggregator Backend - FastAPI Application
 """
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Enum as SQLEnum
 from sqlalchemy.ext.declarative import declarative_base
@@ -116,28 +116,23 @@ def get_db():
 # =====================================
 
 @app.get("/tournaments", response_model=List[TournamentSchema])
-def get_tournaments(db: Session = None):
+def get_tournaments(db: Session = Depends(get_db)):
     """Fetch all tournaments, sorted by LIVE status first"""
-    db = SessionLocal()
-    try:
-        # First get LIVE tournaments, then others
-        live_tournaments = db.query(TournamentDB).filter(
-            TournamentDB.status == TournamentStatus.LIVE
-        ).all()
-        
-        other_tournaments = db.query(TournamentDB).filter(
-            TournamentDB.status != TournamentStatus.LIVE
-        ).order_by(TournamentDB.start_time).all()
-        
-        return live_tournaments + other_tournaments
-    finally:
-        db.close()
+    # First get LIVE tournaments, then others
+    live_tournaments = db.query(TournamentDB).filter(
+        TournamentDB.status == TournamentStatus.LIVE
+    ).all()
+    
+    other_tournaments = db.query(TournamentDB).filter(
+        TournamentDB.status != TournamentStatus.LIVE
+    ).order_by(TournamentDB.start_time).all()
+    
+    return live_tournaments + other_tournaments
 
 
 @app.post("/tournaments", response_model=TournamentSchema, status_code=status.HTTP_201_CREATED)
-def create_tournament(tournament: TournamentCreateSchema, db: Session = None):
+def create_tournament(tournament: TournamentCreateSchema, db: Session = Depends(get_db)):
     """Create a new tournament"""
-    db = SessionLocal()
     try:
         db_tournament = TournamentDB(**tournament.model_dump())
         db.add(db_tournament)
@@ -147,14 +142,11 @@ def create_tournament(tournament: TournamentCreateSchema, db: Session = None):
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        db.close()
 
 
 @app.put("/tournaments/{tournament_id}", response_model=TournamentSchema)
-def update_tournament(tournament_id: int, tournament: TournamentUpdateSchema, db: Session = None):
+def update_tournament(tournament_id: int, tournament: TournamentUpdateSchema, db: Session = Depends(get_db)):
     """Update a tournament by ID"""
-    db = SessionLocal()
     try:
         db_tournament = db.query(TournamentDB).filter(
             TournamentDB.id == tournament_id
@@ -179,14 +171,11 @@ def update_tournament(tournament_id: int, tournament: TournamentUpdateSchema, db
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        db.close()
 
 
 @app.delete("/tournaments/{tournament_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_tournament(tournament_id: int, db: Session = None):
+def delete_tournament(tournament_id: int, db: Session = Depends(get_db)):
     """Delete a tournament by ID"""
-    db = SessionLocal()
     try:
         db_tournament = db.query(TournamentDB).filter(
             TournamentDB.id == tournament_id
@@ -206,8 +195,6 @@ def delete_tournament(tournament_id: int, db: Session = None):
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        db.close()
 
 
 @app.get("/health")
