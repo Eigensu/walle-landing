@@ -3,6 +3,7 @@
 import { useTournaments } from '@/lib/hooks';
 import { TournamentCard } from '@/components/TournamentCard';
 import { Loader, AlertCircle } from 'lucide-react';
+import Image from 'next/image';
 
 export default function Home() {
   const { data: tournaments, isLoading, error } = useTournaments();
@@ -13,7 +14,13 @@ export default function Home() {
       <header className="bg-walle-dark/80 backdrop-blur-md border-b border-walle-purple/20 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="text-4xl">🎯</div>
+            <Image 
+              src="/walle-logo.png" 
+              alt="WALL-E Arena Logo" 
+              width={48} 
+              height={48}
+              className="object-contain"
+            />
             <div>
               <h1 className="text-2xl font-bold text-white">
                 WALL-E ARENA
@@ -23,6 +30,12 @@ export default function Home() {
               </p>
             </div>
           </div>
+          <a 
+            href="/contact"
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-6 py-2.5 rounded-walle transition-all duration-300 hover:scale-105"
+          >
+            Contact Us
+          </a>
         </div>
       </header>
 
