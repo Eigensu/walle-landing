@@ -5,6 +5,10 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Tournament Aggregator',
   description: 'Live gaming tournaments at your fingertips',
+  icons: {
+    icon: '/walle-logo.png',
+    apple: '/walle-logo.png',
+  },
 };
 
 export default function RootLayout({
