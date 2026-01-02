@@ -2,15 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-@keyframes pulse-red {
+@keyframes pulse-green {
   0%, 100% {
     opacity: 1;
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.7;
   }
 }
 
-.animate-pulse-red {
-  animation: pulse-red 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.animate-pulse-green {
+  animation: pulse-green 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@layer base {
+  body {
+    @apply bg-walle-darker;
+  }
+}
+
+.purple-gradient {
+  background: linear-gradient(135deg, rgba(93, 63, 143, 0.4) 0%, rgba(61, 38, 104, 0.3) 100%);
+  backdrop-filter: blur(10px);
 }

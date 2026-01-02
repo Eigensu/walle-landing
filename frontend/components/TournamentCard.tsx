@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ExternalLink, Radio } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { Tournament } from '@/lib/api';
 
 interface TournamentCardProps {
@@ -25,61 +25,48 @@ export function TournamentCard({ tournament, onClick }: TournamentCardProps) {
   return (
     <div
       onClick={onClick}
-      className={`relative overflow-hidden rounded-lg cursor-pointer transition-transform hover:scale-105 ${
-        isLive ? 'ring-2 ring-red-500 ring-opacity-50' : ''
-      }`}
+      className="relative overflow-hidden rounded-walle-lg cursor-pointer transition-all hover:scale-[1.02] group purple-gradient border border-walle-purple/30"
     >
-      {/* Image */}
-      <div className="relative w-full h-48 bg-gray-800 overflow-hidden">
-        {tournament.image_url && (
-          <img
-            src={tournament.image_url}
-            alt={tournament.title}
-            className="w-full h-full object-cover"
-          />
-        )}
-        {/* Live Indicator */}
-        {isLive && (
-          <div className="absolute top-3 right-3 flex items-center gap-2 bg-red-600 text-white px-3 py-1 rounded-full animate-pulse-red">
-            <Radio className="w-4 h-4 fill-current" />
-            <span className="text-sm font-semibold">LIVE</span>
-          </div>
-        )}
-      </div>
+      {/* Live Indicator - Top Right */}
+      {isLive && (
+        <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 bg-green-500 text-white px-3 py-1.5 rounded-full animate-pulse-green shadow-lg">
+          <div className="w-2 h-2 bg-white rounded-full"></div>
+          <span className="text-xs font-bold tracking-wide">LIVE</span>
+        </div>
+      )}
 
       {/* Content */}
-      <div className="bg-gray-900 p-4 text-white">
-        <h3 className="text-lg font-bold truncate">{tournament.title}</h3>
-        <p className="text-sm text-gray-400 mb-3">{tournament.game_name}</p>
-
-        <div className="flex items-center justify-between">
-          <div className="text-xs text-gray-500">
-            <p>{formattedDate}</p>
-            <p>{formattedTime}</p>
-          </div>
-          {isLive ? (
-            <span className="text-xs bg-red-600 text-white px-2 py-1 rounded">
-              LIVE
-            </span>
-          ) : (
-            <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded">
-              {tournament.status}
-            </span>
-          )}
+      <div className="p-6 text-white relative min-h-[240px] flex flex-col justify-between">
+        <div>
+          <h3 className="text-xl font-bold mb-2 leading-tight pr-20">{tournament.title}</h3>
+          <p className="text-purple-200 text-sm mb-6">
+            Starts: {formattedDate}, {formattedTime}
+          </p>
         </div>
 
-        {tournament.stream_url && (
-          <button
-            className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-semibold text-sm flex items-center justify-center gap-2"
-            onClick={(e) => {
-              e.stopPropagation();
-              window.open(tournament.stream_url, '_blank');
-            }}
-          >
-            <ExternalLink className="w-4 h-4" />
-            Watch Stream
-          </button>
+        {/* Logo/Image in bottom right */}
+        {tournament.image_url && (
+          <div className="absolute bottom-6 right-6 w-20 h-20 opacity-40 group-hover:opacity-60 transition-opacity">
+            <img
+              src={tournament.image_url}
+              alt={tournament.game_name}
+              className="w-full h-full object-contain"
+            />
+          </div>
         )}
+
+        {/* CTA Button */}
+        <button
+          className="w-fit bg-walle-dark hover:bg-walle-purple text-white px-6 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-lg hover:shadow-purple-500/30 flex items-center gap-2"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (tournament.stream_url) {
+              window.open(tournament.stream_url, '_blank');
+            }
+          }}
+        >
+          Login to Join Contest
+        </button>
       </div>
     </div>
   );
