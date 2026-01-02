@@ -65,7 +65,7 @@ export function TournamentCard({ tournament, onClick }: TournamentCardProps) {
             }
           }}
         >
-          Login to Join Contest
+          Go to Contest
         </button>
       </div>
     </div>

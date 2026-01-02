@@ -3,7 +3,6 @@
 import { useTournaments } from '@/lib/hooks';
 import { TournamentCard } from '@/components/TournamentCard';
 import { Loader, AlertCircle } from 'lucide-react';
-import Link from 'next/link';
 
 export default function Home() {
   const { data: tournaments, isLoading, error } = useTournaments();
@@ -20,20 +19,9 @@ export default function Home() {
                 WALL-E ARENA
               </h1>
               <p className="text-purple-300 text-sm">
-                Live Contests
+                Tournaments
               </p>
             </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/leaderboard"
-              className="px-4 py-2 text-white hover:text-purple-300 transition-colors flex items-center gap-2"
-            >
-              🏆 Leaderboard
-            </Link>
-            <button className="px-6 py-2.5 bg-walle-purple hover:bg-walle-purple-light text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-purple-500/50">
-              Join Us
-            </button>
           </div>
         </div>
       </header>
@@ -73,10 +61,10 @@ export default function Home() {
           <>
             <div className="mb-10">
               <h2 className="text-3xl font-bold text-white mb-2">
-                Live Contests
+                Tournaments
               </h2>
               <p className="text-purple-300">
-                {tournaments.length} contest{tournaments.length !== 1 ? 's' : ''} available
+                {tournaments.length} tournament{tournaments.length !== 1 ? 's' : ''} available
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
