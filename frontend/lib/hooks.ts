@@ -36,6 +36,22 @@ export function useUpdateTournament() {
   });
 }
 
+export function useTournament(id: number) {
+  return useQuery({
+    queryKey: ['tournament', id],
+    queryFn: () => tournamentAPI.getById(id),
+    enabled: !!id,
+  });
+}
+
+export function useTournamentApiUrl(id: number) {
+  return useQuery({
+    queryKey: ['tournament', id, 'api-url'],
+    queryFn: () => tournamentAPI.getApiUrl(id),
+    enabled: !!id,
+  });
+}
+
 export function useDeleteTournament() {
   const queryClient = useQueryClient();
 

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Gatekeeper } from '@/components/Gatekeeper';
+import { ClientOnly } from '@/components/ClientOnly';
 import { useTournaments, useDeleteTournament } from '@/lib/hooks';
 import { TournamentModal } from '@/components/TournamentModal';
 import { Tournament } from '@/lib/api';
@@ -12,31 +13,17 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTournament, setEditingTournament] = useState<Tournament | undefined>();
-  const [mounted, setMounted] = useState(false);
 
   const { data: tournaments, isLoading, error } = useTournaments();
   const deleteMutation = useDeleteTournament();
 
   // Check authentication on mount
   useEffect(() => {
-    setMounted(true);
     const authStatus = sessionStorage.getItem('adminAuth');
     if (authStatus === 'true') {
       setIsAuthenticated(true);
     }
   }, []);
-
-  if (!mounted) {
-    return null;
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <Gatekeeper
-        onAuthenticated={() => setIsAuthenticated(true)}
-      />
-    );
-  }
 
   const handleAddTournament = () => {
     setEditingTournament(undefined);
@@ -60,7 +47,20 @@ export default function AdminPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black">
+    <ClientOnly
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-400">Loading...</p>
+          </div>
+        </div>
+      }
+    >
+      {!isAuthenticated ? (
+        <Gatekeeper onAuthenticated={() => setIsAuthenticated(true)} />
+      ) : (
+        <main className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black">
       {/* Header */}
       <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
@@ -151,6 +151,9 @@ export default function AdminPage() {
                     Game
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-300">
+                    API URL
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-300">
                     Status
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-300">
@@ -163,15 +166,23 @@ export default function AdminPage() {
               </thead>
               <tbody>
                 {tournaments.map((tournament, idx) => (
-                  <tr
-                    key={tournament.id}
-                    className={idx % 2 === 0 ? 'bg-gray-800' : 'bg-gray-750'}
-                  >
+                  <tr key={tournament.id} className={idx % 2 === 0 ? 'bg-gray-800' : 'bg-gray-750'}>
                     <td className="px-6 py-3 text-sm text-white">
                       {tournament.title}
                     </td>
                     <td className="px-6 py-3 text-sm text-gray-400">
                       {tournament.game_name}
+                    </td>
+                    <td className="px-6 py-3 text-sm text-gray-400">
+                      <a 
+                        href={tournament.api_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:text-blue-300 underline truncate block max-w-48"
+                        title={tournament.api_url}
+                      >
+                        {tournament.api_url}
+                      </a>
                     </td>
                     <td className="px-6 py-3 text-sm">
                       <span
@@ -224,5 +235,7 @@ export default function AdminPage() {
         tournament={editingTournament}
       />
     </main>
+      )}
+    </ClientOnly>
   );
 }

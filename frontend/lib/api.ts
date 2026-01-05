@@ -12,6 +12,7 @@ export interface Tournament {
   game_name: string;
   stream_url: string;
   image_url: string;
+  api_url: string;
   status: 'LIVE' | 'UPCOMING' | 'COMPLETED';
   start_time: string;
 }
@@ -21,6 +22,7 @@ export interface TournamentCreate {
   game_name: string;
   stream_url: string;
   image_url: string;
+  api_url: string;
   status?: 'LIVE' | 'UPCOMING' | 'COMPLETED';
   start_time: string;
 }
@@ -30,6 +32,7 @@ export interface TournamentUpdate {
   game_name?: string;
   stream_url?: string;
   image_url?: string;
+  api_url?: string;
   status?: 'LIVE' | 'UPCOMING' | 'COMPLETED';
   start_time?: string;
 }
@@ -38,6 +41,16 @@ export interface TournamentUpdate {
 export const tournamentAPI = {
   getAll: async (): Promise<Tournament[]> => {
     const { data } = await api.get('/tournaments');
+    return data;
+  },
+
+  getById: async (id: number): Promise<Tournament> => {
+    const { data } = await api.get(`/tournaments/${id}`);
+    return data;
+  },
+
+  getApiUrl: async (id: number): Promise<{ api_url: string }> => {
+    const { data } = await api.get(`/tournaments/${id}/api-url`);
     return data;
   },
 

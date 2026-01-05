@@ -82,10 +82,7 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {tournaments.map((tournament) => (
-                <TournamentCard
-                  key={tournament.id}
-                  tournament={tournament}
-                />
+                <TournamentCard key={tournament.id} tournament={tournament} />
               ))}
             </div>
           </>

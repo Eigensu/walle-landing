@@ -58,6 +58,7 @@ class TournamentSchema(BaseModel):
     game_name: str
     stream_url: str
     image_url: str
+    api_url: str
     status: TournamentStatus
     start_time: datetime
 
@@ -72,6 +73,7 @@ class TournamentCreateSchema(BaseModel):
     game_name: str
     stream_url: str
     image_url: str
+    api_url: str
     status: TournamentStatus = TournamentStatus.UPCOMING
     start_time: datetime
 
@@ -82,6 +84,7 @@ class TournamentUpdateSchema(BaseModel):
     game_name: Optional[str] = None
     stream_url: Optional[str] = None
     image_url: Optional[str] = None
+    api_url: Optional[str] = None
     status: Optional[TournamentStatus] = None
     start_time: Optional[datetime] = None
 
@@ -136,6 +139,59 @@ async def get_tournaments():
         return [TournamentSchema(**{**t, "_id": str(t["_id"])}) for t in all_tournaments]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/tournaments/{tournament_id}", response_model=TournamentSchema)
+async def get_tournament(tournament_id: str):
+    """Get a specific tournament by ID"""
+    try:
+        if not ObjectId.is_valid(tournament_id):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid tournament ID format"
+            )
+        
+        tournament = await tournaments_collection.find_one({"_id": ObjectId(tournament_id)})
+        
+        if not tournament:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Tournament not found"
+            )
+        
+        return TournamentSchema(**{**tournament, "_id": str(tournament["_id"])})
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/tournaments/{tournament_id}/api-url")
+async def get_tournament_api_url(tournament_id: str):
+    """Get the API URL for a specific tournament"""
+    try:
+        if not ObjectId.is_valid(tournament_id):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid tournament ID format"
+            )
+        
+        tournament = await tournaments_collection.find_one(
+            {"_id": ObjectId(tournament_id)}, 
+            {"api_url": 1}
+        )
+        
+        if not tournament:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Tournament not found"
+            )
+        
+        return {"api_url": tournament.get("api_url", "")}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @app.post("/tournaments", response_model=TournamentSchema, status_code=status.HTTP_201_CREATED)

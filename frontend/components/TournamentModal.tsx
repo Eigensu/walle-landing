@@ -25,6 +25,7 @@ export function TournamentModal({
           game_name: tournament.game_name,
           stream_url: tournament.stream_url,
           image_url: tournament.image_url,
+          api_url: tournament.api_url,
           status: tournament.status,
           start_time: tournament.start_time.split('T')[0],
         }
@@ -33,6 +34,7 @@ export function TournamentModal({
           game_name: '',
           stream_url: '',
           image_url: '',
+          api_url: '',
           status: 'UPCOMING',
           start_time: new Date().toISOString().split('T')[0],
         }
@@ -44,7 +46,7 @@ export function TournamentModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.title || !formData.game_name || !formData.stream_url || !formData.image_url || !formData.start_time) {
+    if (!formData.title || !formData.game_name || !formData.stream_url || !formData.image_url || !formData.api_url || !formData.start_time) {
       alert('Please fill in all fields');
       return;
     }
@@ -65,6 +67,7 @@ export function TournamentModal({
               game_name: '',
               stream_url: '',
               image_url: '',
+              api_url: '',
               status: 'UPCOMING',
               start_time: new Date().toISOString().split('T')[0],
             });
@@ -80,6 +83,7 @@ export function TournamentModal({
             game_name: '',
             stream_url: '',
             image_url: '',
+            api_url: '',
             status: 'UPCOMING',
             start_time: new Date().toISOString().split('T')[0],
           });
@@ -162,6 +166,22 @@ export function TournamentModal({
                 setFormData({ ...formData, image_url: e.target.value })
               }
               className="w-full border border-gray-300 rounded px-3 py-2 text-black"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              API URL
+            </label>
+            <input
+              type="url"
+              value={formData.api_url || ''}
+              onChange={(e) =>
+                setFormData({ ...formData, api_url: e.target.value })
+              }
+              className="w-full border border-gray-300 rounded px-3 py-2 text-black"
+              placeholder="https://api.example.com/tournament"
               required
             />
           </div>

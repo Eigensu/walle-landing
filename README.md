@@ -182,9 +182,22 @@ curl -X POST http://localhost:8000/tournaments \
     "game_name": "Valorant",
     "stream_url": "https://twitch.tv/example",
     "image_url": "https://example.com/image.jpg",
+    "api_url": "https://api.valorant-championship.com",
     "status": "LIVE",
     "start_time": "2024-01-10T15:00:00"
   }'
+```
+
+### GET /tournaments/{id}
+Get a specific tournament by ID
+```bash
+curl http://localhost:8000/tournaments/1
+```
+
+### GET /tournaments/{id}/api-url
+Get the API URL for a specific tournament
+```bash
+curl http://localhost:8000/tournaments/1/api-url
 ```
 
 ### PUT /tournaments/{id}
@@ -221,6 +234,7 @@ The SQLite database (`tournaments.db`) is created automatically on first run.
 | game_name | String | Game title (e.g., Valorant) |
 | stream_url | String | Stream URL |
 | image_url | String | Image URL |
+| api_url | String | Backend API URL for tournament data |
 | status | Enum | LIVE, UPCOMING, COMPLETED |
 | start_time | DateTime | Start date/time |
 
@@ -268,6 +282,7 @@ curl -X POST http://localhost:8000/tournaments \
     "game_name": "Counter-Strike 2",
     "stream_url": "https://twitch.tv/esl_csgo",
     "image_url": "https://via.placeholder.com/400x300?text=ESL+Pro+League",
+    "api_url": "https://api.eslgaming.com/pro-league",
     "status": "LIVE",
     "start_time": "2024-01-15T20:00:00"
   }'
