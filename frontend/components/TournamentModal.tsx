@@ -59,7 +59,7 @@ export function TournamentModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.title || !formData.game_name || !formData.stream_url || !formData.image_url || !formData.start_time) {
+    if (!formData.title || !formData.game_name || !formData.stream_url || !formData.image_url || !formData.api_url || !formData.start_time) {
       alert('Please fill in all required fields');
       return;
     }
@@ -68,6 +68,10 @@ export function TournamentModal({
       ...formData,
       start_time: new Date(formData.start_time!).toISOString(),
     };
+
+    console.log('Submitting data:', submitData);
+    console.log('Is edit mode:', isEditMode);
+    console.log('Tournament ID:', tournament?.id);
 
     if (isEditMode && tournament) {
       updateMutation.mutate(
@@ -85,6 +89,10 @@ export function TournamentModal({
               start_time: new Date().toISOString().split('T')[0],
             });
           },
+          onError: (error) => {
+            console.error('Update failed:', error);
+            alert(`Failed to update tournament: ${error.message}`);
+          },
         }
       );
     } else {
@@ -100,6 +108,10 @@ export function TournamentModal({
             status: 'UPCOMING',
             start_time: new Date().toISOString().split('T')[0],
           });
+        },
+        onError: (error) => {
+          console.error('Create failed:', error);
+          alert(`Failed to create tournament: ${error.message}`);
         },
       });
     }

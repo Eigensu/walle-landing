@@ -53,12 +53,12 @@ class TournamentStatus(str, Enum):
 
 class TournamentSchema(BaseModel):
     """Pydantic schema for Tournament (Response)"""
-    id: str = Field(alias="_id")
+    id: str
     title: str
     game_name: str
     stream_url: str
     image_url: str
-    api_url: str = ""  # Default empty string for existing records
+    api_url: str
     status: TournamentStatus
     start_time: datetime
 
@@ -137,12 +137,14 @@ async def get_tournaments():
         
         all_tournaments = live_tournaments + other_tournaments
         
-        # Handle missing api_url field for existing records
+        # Convert _id to id for each tournament
+        result = []
         for tournament in all_tournaments:
-            if "api_url" not in tournament:
-                tournament["api_url"] = ""
+            tournament_dict = dict(tournament)
+            tournament_dict["id"] = str(tournament_dict.pop("_id"))
+            result.append(TournamentSchema(**tournament_dict))
         
-        return [TournamentSchema(**{**t, "_id": str(t["_id"])}) for t in all_tournaments]
+        return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -165,11 +167,10 @@ async def get_tournament(tournament_id: str):
                 detail="Tournament not found"
             )
         
-        # Handle missing api_url field for existing records
-        if "api_url" not in tournament:
-            tournament["api_url"] = ""
-        
-        return TournamentSchema(**{**tournament, "_id": str(tournament["_id"])})
+        # Convert _id to id
+        tournament_dict = dict(tournament)
+        tournament_dict["id"] = str(tournament_dict.pop("_id"))
+        return TournamentSchema(**tournament_dict)
     except HTTPException:
         raise
     except Exception as e:
@@ -212,7 +213,11 @@ async def create_tournament(tournament: TournamentCreateSchema):
         result = await tournaments_collection.insert_one(tournament_dict)
         
         created_tournament = await tournaments_collection.find_one({"_id": result.inserted_id})
-        return TournamentSchema(**{**created_tournament, "_id": str(created_tournament["_id"])})
+        
+        # Convert _id to id
+        tournament_dict = dict(created_tournament)
+        tournament_dict["id"] = str(tournament_dict.pop("_id"))
+        return TournamentSchema(**tournament_dict)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -248,7 +253,11 @@ async def update_tournament(tournament_id: str, tournament: TournamentUpdateSche
             )
         
         updated_tournament = await tournaments_collection.find_one({"_id": ObjectId(tournament_id)})
-        return TournamentSchema(**{**updated_tournament, "_id": str(updated_tournament["_id"])})
+        
+        # Convert _id to id
+        tournament_dict = dict(updated_tournament)
+        tournament_dict["id"] = str(tournament_dict.pop("_id"))
+        return TournamentSchema(**tournament_dict)
     except HTTPException:
         raise
     except Exception as e:
