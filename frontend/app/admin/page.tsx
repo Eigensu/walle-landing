@@ -35,7 +35,7 @@ export default function AdminPage() {
     setIsModalOpen(true);
   };
 
-  const handleDeleteTournament = (id: number) => {
+  const handleDeleteTournament = (id: string) => {
     if (confirm('Are you sure you want to delete this tournament?')) {
       deleteMutation.mutate(id);
     }
@@ -166,7 +166,10 @@ export default function AdminPage() {
               </thead>
               <tbody>
                 {tournaments.map((tournament, idx) => (
-                  <tr key={tournament.id} className={idx % 2 === 0 ? 'bg-gray-800' : 'bg-gray-750'}>
+                  <tr 
+                    key={String(tournament.id || `tournament-${idx}`)} 
+                    className={idx % 2 === 0 ? 'bg-gray-800' : 'bg-gray-750'}
+                  >
                     <td className="px-6 py-3 text-sm text-white">
                       {tournament.title}
                     </td>

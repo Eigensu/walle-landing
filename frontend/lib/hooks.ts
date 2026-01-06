@@ -28,7 +28,7 @@ export function useUpdateTournament() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: TournamentUpdate }) =>
+    mutationFn: ({ id, data }: { id: string; data: TournamentUpdate }) =>
       tournamentAPI.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TOURNAMENTS_KEY });
@@ -36,7 +36,7 @@ export function useUpdateTournament() {
   });
 }
 
-export function useTournament(id: number) {
+export function useTournament(id: string) {
   return useQuery({
     queryKey: ['tournament', id],
     queryFn: () => tournamentAPI.getById(id),
@@ -44,7 +44,7 @@ export function useTournament(id: number) {
   });
 }
 
-export function useTournamentApiUrl(id: number) {
+export function useTournamentApiUrl(id: string) {
   return useQuery({
     queryKey: ['tournament', id, 'api-url'],
     queryFn: () => tournamentAPI.getApiUrl(id),
@@ -56,7 +56,7 @@ export function useDeleteTournament() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: number) => tournamentAPI.delete(id),
+    mutationFn: (id: string) => tournamentAPI.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TOURNAMENTS_KEY });
     },

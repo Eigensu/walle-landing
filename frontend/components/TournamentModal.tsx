@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useCreateTournament, useUpdateTournament } from '@/lib/hooks';
 import { Tournament, TournamentCreate, TournamentUpdate } from '@/lib/api';
@@ -18,27 +18,40 @@ export function TournamentModal({
 }: TournamentModalProps) {
   const isEditMode = !!tournament;
 
-  const [formData, setFormData] = useState<Partial<TournamentCreate>>(
-    tournament
-      ? {
-          title: tournament.title,
-          game_name: tournament.game_name,
-          stream_url: tournament.stream_url,
-          image_url: tournament.image_url,
-          api_url: tournament.api_url || '',
-          status: tournament.status,
-          start_time: tournament.start_time.split('T')[0],
-        }
-      : {
-          title: '',
-          game_name: '',
-          stream_url: '',
-          image_url: '',
-          api_url: '',
-          status: 'UPCOMING',
-          start_time: new Date().toISOString().split('T')[0],
-        }
-  );
+  const [formData, setFormData] = useState<Partial<TournamentCreate>>({
+    title: '',
+    game_name: '',
+    stream_url: '',
+    image_url: '',
+    api_url: '',
+    status: 'UPCOMING',
+    start_time: new Date().toISOString().split('T')[0],
+  });
+
+  // Update form data when tournament prop changes
+  useEffect(() => {
+    if (tournament) {
+      setFormData({
+        title: tournament.title,
+        game_name: tournament.game_name,
+        stream_url: tournament.stream_url,
+        image_url: tournament.image_url,
+        api_url: tournament.api_url || '',
+        status: tournament.status,
+        start_time: tournament.start_time.split('T')[0],
+      });
+    } else {
+      setFormData({
+        title: '',
+        game_name: '',
+        stream_url: '',
+        image_url: '',
+        api_url: '',
+        status: 'UPCOMING',
+        start_time: new Date().toISOString().split('T')[0],
+      });
+    }
+  }, [tournament]);
 
   const createMutation = useCreateTournament();
   const updateMutation = useUpdateTournament();
@@ -172,7 +185,7 @@ export function TournamentModal({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              API URL (Optional)
+              API URL
             </label>
             <input
               type="url"

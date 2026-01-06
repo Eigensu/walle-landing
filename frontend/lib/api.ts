@@ -7,12 +7,12 @@ export const api = axios.create({
 });
 
 export interface Tournament {
-  id: number;
+  id: string;
   title: string;
   game_name: string;
   stream_url: string;
   image_url: string;
-  api_url?: string;  // Make optional for backward compatibility
+  api_url: string;
   status: 'LIVE' | 'UPCOMING' | 'COMPLETED';
   start_time: string;
 }
@@ -32,7 +32,7 @@ export interface TournamentUpdate {
   game_name?: string;
   stream_url?: string;
   image_url?: string;
-  api_url?: string;  // Keep optional for updates
+  api_url?: string;
   status?: 'LIVE' | 'UPCOMING' | 'COMPLETED';
   start_time?: string;
 }
@@ -44,12 +44,12 @@ export const tournamentAPI = {
     return data;
   },
 
-  getById: async (id: number): Promise<Tournament> => {
+  getById: async (id: string): Promise<Tournament> => {
     const { data } = await api.get(`/tournaments/${id}`);
     return data;
   },
 
-  getApiUrl: async (id: number): Promise<{ api_url: string }> => {
+  getApiUrl: async (id: string): Promise<{ api_url: string }> => {
     const { data } = await api.get(`/tournaments/${id}/api-url`);
     return data;
   },
@@ -59,12 +59,12 @@ export const tournamentAPI = {
     return data;
   },
 
-  update: async (id: number, tournament: TournamentUpdate): Promise<Tournament> => {
+  update: async (id: string, tournament: TournamentUpdate): Promise<Tournament> => {
     const { data } = await api.put(`/tournaments/${id}`, tournament);
     return data;
   },
 
-  delete: async (id: number): Promise<void> => {
+  delete: async (id: string): Promise<void> => {
     await api.delete(`/tournaments/${id}`);
   },
 };
