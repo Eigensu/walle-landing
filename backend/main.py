@@ -58,7 +58,7 @@ class TournamentSchema(BaseModel):
     game_name: str
     stream_url: str
     image_url: str
-    api_url: str
+    api_url: str = ""  # Default empty string for existing records
     status: TournamentStatus
     start_time: datetime
 
@@ -136,6 +136,12 @@ async def get_tournaments():
         ).sort("start_time", 1).to_list(None)
         
         all_tournaments = live_tournaments + other_tournaments
+        
+        # Handle missing api_url field for existing records
+        for tournament in all_tournaments:
+            if "api_url" not in tournament:
+                tournament["api_url"] = ""
+        
         return [TournamentSchema(**{**t, "_id": str(t["_id"])}) for t in all_tournaments]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -158,6 +164,10 @@ async def get_tournament(tournament_id: str):
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Tournament not found"
             )
+        
+        # Handle missing api_url field for existing records
+        if "api_url" not in tournament:
+            tournament["api_url"] = ""
         
         return TournamentSchema(**{**tournament, "_id": str(tournament["_id"])})
     except HTTPException:

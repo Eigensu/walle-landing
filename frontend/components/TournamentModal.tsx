@@ -25,7 +25,7 @@ export function TournamentModal({
           game_name: tournament.game_name,
           stream_url: tournament.stream_url,
           image_url: tournament.image_url,
-          api_url: tournament.api_url,
+          api_url: tournament.api_url || '',
           status: tournament.status,
           start_time: tournament.start_time.split('T')[0],
         }
@@ -46,8 +46,8 @@ export function TournamentModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.title || !formData.game_name || !formData.stream_url || !formData.image_url || !formData.api_url || !formData.start_time) {
-      alert('Please fill in all fields');
+    if (!formData.title || !formData.game_name || !formData.stream_url || !formData.image_url || !formData.start_time) {
+      alert('Please fill in all required fields');
       return;
     }
 
@@ -172,7 +172,7 @@ export function TournamentModal({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              API URL
+              API URL (Optional)
             </label>
             <input
               type="url"
@@ -182,7 +182,6 @@ export function TournamentModal({
               }
               className="w-full border border-gray-300 rounded px-3 py-2 text-black"
               placeholder="https://api.example.com/tournament"
-              required
             />
           </div>
 

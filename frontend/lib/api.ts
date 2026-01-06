@@ -12,7 +12,7 @@ export interface Tournament {
   game_name: string;
   stream_url: string;
   image_url: string;
-  api_url: string;
+  api_url?: string;  // Make optional for backward compatibility
   status: 'LIVE' | 'UPCOMING' | 'COMPLETED';
   start_time: string;
 }
@@ -32,7 +32,7 @@ export interface TournamentUpdate {
   game_name?: string;
   stream_url?: string;
   image_url?: string;
-  api_url?: string;
+  api_url?: string;  // Keep optional for updates
   status?: 'LIVE' | 'UPCOMING' | 'COMPLETED';
   start_time?: string;
 }

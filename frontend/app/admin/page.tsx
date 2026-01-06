@@ -174,15 +174,19 @@ export default function AdminPage() {
                       {tournament.game_name}
                     </td>
                     <td className="px-6 py-3 text-sm text-gray-400">
-                      <a 
-                        href={tournament.api_url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-blue-400 hover:text-blue-300 underline truncate block max-w-48"
-                        title={tournament.api_url}
-                      >
-                        {tournament.api_url}
-                      </a>
+                      {tournament.api_url ? (
+                        <a 
+                          href={tournament.api_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-blue-400 hover:text-blue-300 underline truncate block max-w-48"
+                          title={tournament.api_url}
+                        >
+                          {tournament.api_url}
+                        </a>
+                      ) : (
+                        <span className="text-gray-500 italic">Not set</span>
+                      )}
                     </td>
                     <td className="px-6 py-3 text-sm">
                       <span
