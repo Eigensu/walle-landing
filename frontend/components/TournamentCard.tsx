@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ExternalLink } from 'lucide-react';
+import { Calendar, ExternalLink } from 'lucide-react';
 import { Tournament } from '@/lib/api';
 
 interface TournamentCardProps {
@@ -13,9 +13,9 @@ export function TournamentCard({ tournament, onClick }: TournamentCardProps) {
   const isLive = tournament.status === 'LIVE';
   const startDate = new Date(tournament.start_time);
   const formattedDate = startDate.toLocaleDateString('en-US', {
+    weekday: 'short',
     month: 'short',
     day: 'numeric',
-    year: 'numeric',
   });
   const formattedTime = startDate.toLocaleTimeString('en-US', {
     hour: '2-digit',
@@ -25,39 +25,52 @@ export function TournamentCard({ tournament, onClick }: TournamentCardProps) {
   return (
     <div
       onClick={onClick}
-      className="relative overflow-hidden rounded-walle-lg cursor-pointer transition-all hover:scale-[1.02] group purple-gradient border border-walle-purple/30"
+      className="relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-purple-500/20 group bg-walle-dark border border-walle-purple/40 hover:border-purple-500/60"
     >
-      {/* Live Indicator - Top Right */}
-      {isLive && (
-        <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 bg-green-500 text-white px-3 py-1.5 rounded-full animate-pulse-green shadow-lg">
-          <div className="w-2 h-2 bg-white rounded-full"></div>
-          <span className="text-xs font-bold tracking-wide">LIVE</span>
-        </div>
-      )}
-
+      {/* Background Glow */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-pink-600/5" />
+      
       {/* Content */}
-      <div className="p-6 text-white relative min-h-[240px] flex flex-col justify-between">
-        <div>
-          <h3 className="text-xl font-bold mb-2 leading-tight pr-20">{tournament.title}</h3>
-          <p className="text-purple-200 text-sm mb-6">
-            Starts: {formattedDate}, {formattedTime}
-          </p>
-        </div>
-
-        {/* Logo/Image in bottom right */}
-        {tournament.image_url && (
-          <div className="absolute bottom-6 right-6 w-20 h-20 opacity-40 group-hover:opacity-60 transition-opacity">
-            <img
-              src={tournament.image_url}
-              alt={tournament.game_name}
-              className="w-full h-full object-contain"
-            />
+      <div className="relative p-6 md:p-8">
+        <div className="flex items-start justify-between gap-4 mb-6">
+          <div className="flex-1">
+            {/* Status Badge */}
+            {isLive ? (
+              <div className="inline-flex items-center gap-1.5 bg-green-500/20 text-green-400 px-3 py-1 rounded-full mb-4">
+                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                <span className="text-xs font-semibold tracking-wide">LIVE NOW</span>
+              </div>
+            ) : (
+              <div className="inline-flex items-center gap-1.5 bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full mb-4">
+                <span className="text-xs font-semibold tracking-wide">UPCOMING</span>
+              </div>
+            )}
+            
+            <h3 className="text-xl md:text-2xl font-bold text-white mb-3 leading-tight">
+              {tournament.title}
+            </h3>
+            
+            <div className="flex items-center gap-2 text-purple-300">
+              <Calendar className="w-4 h-4" />
+              <span className="text-sm">{formattedDate} at {formattedTime}</span>
+            </div>
           </div>
-        )}
+
+          {/* Tournament Image */}
+          {tournament.image_url && (
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl bg-walle-dark/50 p-2 flex items-center justify-center">
+              <img
+                src={tournament.image_url}
+                alt={tournament.game_name}
+                className="w-full h-full object-contain opacity-70 group-hover:opacity-100 transition-opacity"
+              />
+            </div>
+          )}
+        </div>
 
         {/* CTA Button */}
         <button
-          className="w-fit bg-walle-dark hover:bg-walle-purple text-white px-6 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-lg hover:shadow-purple-500/30 flex items-center gap-2"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/30"
           onClick={(e) => {
             e.stopPropagation();
             if (tournament.stream_url) {
@@ -66,6 +79,7 @@ export function TournamentCard({ tournament, onClick }: TournamentCardProps) {
           }}
         >
           Go to Tournament
+          <ExternalLink className="w-4 h-4" />
         </button>
       </div>
     </div>

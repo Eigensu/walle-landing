@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Mail, MapPin, Globe, Twitter, Github, Linkedin } from 'lucide-react';
+import { Footer } from '@/components/Footer';
 
 export default function ContactPage() {
   return (
@@ -13,14 +14,14 @@ export default function ContactPage() {
           <Link href="/" className="flex items-center gap-3">
             <Image 
               src="/walle-logo.png" 
-              alt="WALL-E Arena Logo" 
+              alt="WallE Arena Logo" 
               width={48} 
               height={48}
               className="object-contain"
             />
             <div>
               <h1 className="text-2xl font-bold text-white">
-                WALL-E ARENA
+                WallE Arena
               </h1>
               <p className="text-purple-300 text-sm">
                 Tournaments
@@ -141,14 +142,7 @@ export default function ContactPage() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="mt-20 pb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center text-purple-300">
-            <p>&copy; 2026 WALL-E Arena. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }
