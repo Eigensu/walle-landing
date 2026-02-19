@@ -15,12 +15,24 @@ import os
 # DATABASE SETUP
 # =====================================
 
-MONGODB_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017")
+from dotenv import load_dotenv
+from pathlib import Path
+
+# Load .env from the backend directory
+env_path = Path(__file__).resolve().parent / ".env"
+load_dotenv(dotenv_path=env_path)
+
+MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
 DATABASE_NAME = os.getenv("DATABASE_NAME", "tournament_aggregator")
 
-client = AsyncIOMotorClient(MONGODB_URL)
-db = client[DATABASE_NAME]
-tournaments_collection = db["tournaments"]
+
+# Global variables for DB - initialized in startup
+client: AsyncIOMotorClient = None
+db = None
+tournaments_collection = None
+
+
+
 
 
 # Helper for ObjectId
@@ -98,7 +110,15 @@ app = FastAPI(title="Walle Arena API", version="1.0.0")
 # CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for production
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "https://wallearena.com",
+        "https://www.wallearena.com",
+        "capacitor://localhost",  # Common for mobile apps
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -108,13 +128,23 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup_db_client():
     """Connect to MongoDB on startup"""
-    pass
-
+    global client, db, tournaments_collection
+    try:
+        print(f"Connecting to MongoDB: {MONGODB_URL.split('@')[1] if '@' in MONGODB_URL else MONGODB_URL}")
+        client = AsyncIOMotorClient(MONGODB_URL)
+        db = client[DATABASE_NAME]
+        tournaments_collection = db["tournaments"]
+        print("Connected to MongoDB!")
+    except Exception as e:
+        print(f"Failed to connect to MongoDB: {e}")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
     """Close MongoDB connection on shutdown"""
-    client.close()
+    global client
+    if client:
+        client.close()
+
 
 
 # =====================================
@@ -143,7 +173,7 @@ async def get_tournaments():
             tournament_dict = dict(tournament)
             tournament_dict["id"] = str(tournament_dict.pop("_id"))
             result.append(TournamentSchema(**tournament_dict))
-        
+            
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
