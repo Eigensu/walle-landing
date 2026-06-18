@@ -68,6 +68,20 @@ export default function AdminPage() {
             <h1 className="text-3xl font-bold text-white">⚙️ Admin Dashboard</h1>
             <p className="text-gray-400 text-sm">Manage tournaments</p>
           </div>
+          <div className="flex gap-4 items-center">
+            <Link
+              href="/admin"
+              className="text-blue-400 font-semibold"
+            >
+              Tournaments
+            </Link>
+            <Link
+              href="/admin/carousel"
+              className="text-gray-400 hover:text-white transition-colors font-medium"
+            >
+              Carousel
+            </Link>
+          </div>
           <div className="flex gap-3">
             <Link
               href="/"
