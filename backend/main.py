@@ -155,6 +155,9 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "http://localhost:3001",
+        "http://localhost:3002",
+        "http://127.0.0.1:3002",
         "http://localhost:8000",
         "http://127.0.0.1:8000",
         "https://wallearena.com",
@@ -368,6 +371,18 @@ def health_check():
     """Health check endpoint"""
     return {"status": "ok"}
 
+async def reindex_slides():
+    """Ensure all slides have sequential unique orders (1, 2, 3...)"""
+    # Sort by order ascending, then by updatedAt descending so the most recently updated duplicate wins the lower order position
+    slides = await carousel_collection.find().sort([("order", 1), ("updatedAt", -1)]).to_list(None)
+    for index, s in enumerate(slides):
+        new_order = index + 1
+        if s.get("order") != new_order:
+            await carousel_collection.update_one(
+                {"_id": s["_id"]},
+                {"$set": {"order": new_order}}
+            )
+
 # =====================================
 # CAROUSEL ENDPOINTS
 # =====================================
@@ -413,6 +428,8 @@ async def create_carousel_slide(slide: CarouselSlideCreateSchema):
         slide_dict["updatedAt"] = datetime.utcnow()
         result = await carousel_collection.insert_one(slide_dict)
         
+        await reindex_slides()
+        
         created_slide = await carousel_collection.find_one({"_id": result.inserted_id})
         
         # Convert _id to id
@@ -452,6 +469,8 @@ async def update_carousel_slide(slide_id: str, slide: CarouselSlideUpdateSchema)
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Slide not found"
             )
+            
+        await reindex_slides()
         
         updated_slide = await carousel_collection.find_one({"_id": ObjectId(slide_id)})
         
@@ -480,6 +499,8 @@ async def delete_carousel_slide(slide_id: str):
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Slide not found"
             )
+            
+        await reindex_slides()
         
         return None
     except HTTPException:
@@ -544,8 +565,22 @@ async def upload_image(file: UploadFile = File(...)):
             )
             
         if not os.getenv("CLOUDINARY_CLOUD_NAME"):
-            # Mock upload for development if cloudinary not setup
-            return {"url": "https://placehold.co/1200x800?text=Mock+Upload"}
+            # Fallback to local filesystem upload if Cloudinary is missing
+            import shutil
+            import time
+            
+            upload_dir = Path(__file__).resolve().parent.parent / "frontend" / "public" / "uploads"
+            upload_dir.mkdir(parents=True, exist_ok=True)
+            
+            # Generate unique filename
+            ext = file.filename.split(".")[-1] if "." in file.filename else "jpg"
+            filename = f"upload_{int(time.time())}.{ext}"
+            file_path = upload_dir / filename
+            
+            with open(file_path, "wb") as f:
+                f.write(file_content)
+                
+            return {"url": f"/uploads/{filename}"}
             
         result = cloudinary.uploader.upload(file_content)
         return {"url": result.get("secure_url")}

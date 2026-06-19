@@ -23,7 +23,7 @@ export function Gatekeeper({ onAuthenticated }: GatekeeperProps) {
       sessionStorage.setItem('adminAuth', 'true');
       onAuthenticated();
     } else {
-      setError('Invalid credentials. Try admin / 1234');
+      setError('Invalid username or password');
     }
   };
 
@@ -80,9 +80,6 @@ export function Gatekeeper({ onAuthenticated }: GatekeeperProps) {
           </button>
         </form>
 
-        <p className="text-xs text-gray-500 text-center mt-6">
-          Demo credentials: admin / 1234
-        </p>
       </div>
     </div>
   );
