@@ -44,7 +44,7 @@ export default function ContactPage() {
             Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Touch</span>
           </h1>
           <p className="text-purple-300 text-xl max-w-2xl mx-auto">
-            Have questions about our tournaments? We'd love to hear from you.
+            Have questions about our tournaments? We&apos;d love to hear from you.
           </p>
         </div>
 
