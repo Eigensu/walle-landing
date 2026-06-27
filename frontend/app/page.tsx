@@ -5,6 +5,7 @@ import { useTournaments } from "@/lib/hooks";
 import { TournamentCard } from "@/components/TournamentCard";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { Footer } from "@/components/Footer";
+import { Navbar } from "@/components/Navbar";
 import {
   Loader,
   AlertCircle,
@@ -51,46 +52,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-walle-darker">
       {/* Header */}
-      <header className="sticky w-full top-0 z-50 bg-black/70 backdrop-blur-md border-b border-white/10 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-3">
-            <Image
-              src="/walle-logo.png"
-              alt="WallE Arena Logo"
-              width={44}
-              height={44}
-              className="object-contain"
-            />
-            <span className="text-xl font-bold text-white">WallE Arena</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-8">
-            <a
-              href="#tournaments"
-              className="text-purple-300 hover:text-white transition-colors text-sm font-medium"
-            >
-              Tournaments
-            </a>
-            <a
-              href="#features"
-              className="text-purple-300 hover:text-white transition-colors text-sm font-medium"
-            >
-              Features
-            </a>
-            <Link
-              href="/contact"
-              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-5 py-2 rounded-full transition-all duration-300 hover:scale-105 text-sm"
-            >
-              Contact Us
-            </Link>
-          </nav>
-          <Link
-            href="/contact"
-            className="md:hidden bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold px-4 py-2 rounded-full text-sm"
-          >
-            Contact
-          </Link>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="relative w-full">
