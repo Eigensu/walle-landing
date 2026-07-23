@@ -6,8 +6,9 @@ import { ClientOnly } from '@/components/ClientOnly';
 import { useAllCarousel, useDeleteCarouselSlide, useToggleCarouselSlide } from '@/lib/hooks';
 import { CarouselSlide } from '@/lib/api';
 import { CarouselModal } from '@/components/CarouselModal';
-import { Plus, Edit2, Trash2, Loader, AlertCircle, LogOut, Image as ImageIcon } from 'lucide-react';
+import { Plus, Edit2, Trash2, Loader, AlertCircle, Image as ImageIcon } from 'lucide-react';
 import Link from 'next/link';
+import { AdminNavbar } from '@/components/AdminNavbar';
 
 export default function AdminCarouselPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -66,43 +67,7 @@ export default function AdminCarouselPage() {
       ) : (
         <main className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black">
           {/* Header */}
-          <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-              <div>
-                <h1 className="text-3xl font-bold text-white">⚙️ Admin Dashboard</h1>
-                <p className="text-gray-400 text-sm">Manage hero carousel</p>
-              </div>
-              <div className="flex gap-4 items-center">
-                <Link
-                  href="/admin"
-                  className="text-gray-400 hover:text-white transition-colors font-medium"
-                >
-                  Tournaments
-                </Link>
-                <Link
-                  href="/admin/carousel"
-                  className="text-blue-400 font-semibold"
-                >
-                  Carousel
-                </Link>
-              </div>
-              <div className="flex gap-3">
-                <Link
-                  href="/"
-                  className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded font-medium transition-colors"
-                >
-                  Public Page
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded font-medium transition-colors flex items-center gap-2"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Logout
-                </button>
-              </div>
-            </div>
-          </header>
+          <AdminNavbar subtitle="Manage hero carousel" onLogout={handleLogout} />
 
           {/* Content */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
